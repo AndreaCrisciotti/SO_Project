@@ -27,28 +27,33 @@ void TopStruct_init(TopStruct* top, char* pid,char* user, char* pr, char* ni, ch
   strcpy(top->name, name);
 }
 
-int main(int argc, char** argv){
-  
-    printf("*********************SO_Project Crisciotti Andrea*********************\n");
-
-    const char* src  = "none";
-    const char* trgt = "/proc";
-    const unsigned long mntflags = 0;
+int MountFile(const char* src, const char* trgt, const unsigned long mntflags){
 
     int i = mount(src,trgt,"proc",mntflags,"");
     if (i == 0)
     {
         printf("\nMount created at %s...\n", trgt);
-        umount(trgt);
+        return i;
     }
     else
     {
         printf("\nError : Failed to mount \n"
                 "Reason: %s [%d]\n"
                 , strerror(errno), errno);
-        return -1;
+        return i;
     }
+}
 
+int main(int argc, char** argv){
+  
+    //USE THE EXE FILE WHIT SUDO ---> sudo ./topOS
+    printf("*********************SO_Project Crisciotti Andrea*********************\n");
+
+    const char* src  = "none";
+    const char* trgt = "/proc";
+    const unsigned long mntflags = 0;
+
+    int i = MountFile(src,trgt,mntflags);
     printf("%d",i);
     umount(trgt);
 }
