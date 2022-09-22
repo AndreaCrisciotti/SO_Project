@@ -5,9 +5,9 @@ AR=ar
 
 BINS=topOS
 
-OBJS=binary_file_search.c
+OBJS=
 
-HEADERS=binary_file_search.h
+HEADERS=topOS.h
 
 LIBS=
 
