@@ -4,6 +4,7 @@
 #include<dirent.h>
 #include<pwd.h>
 #include<grp.h>
+#include<ctype.h>
 #include<string.h>
 
 //Definition of struct process
@@ -42,29 +43,39 @@ void printSpecificOfComputer(){
 //Print the information of Computer into PROC
 void takeInformationToProc(){
 
-    printf("COUNT\tUSER\tPR\tNI\tVIRT\tCOMMAND");
+    printf("\nCOUNT\tUSER\tPR\tNI\tVIRT\tCOMMAND\n\n");
 
     struct TopStruct *info = calloc(0, sizeof(struct TopStruct));
-    DIR *directiory = opendir("/proc");
-    struct dirent *dirInfo = readdir(directiory);
+    DIR *directiory;
+    struct dirent *dirInfo;
     int count = 0;
     
-    if(directiory == NULL){
+    if((directiory = opendir("/proc")) == NULL){
        printf("ERROR into Directory PROC!!");
        exit(1);
     }else{
-        while(dirInfo != NULL ){
+        while((dirInfo = readdir(directiory)) != NULL ){
             
+            int is_number = 1;
+            for(int i = 0; i < strnlen(dirInfo->d_name,1000000); i++){
+                if(!isdigit(dirInfo->d_name[i])){
+                    is_number = 0;
+                    break;
+                }
+            }
+            if(!is_number){
+                continue;
+            }
+
             count++;
             info = realloc(info, count * sizeof(struct TopStruct));
             info[count-1].pid = atoi(dirInfo->d_name);
-            // strcpy(info[count].pid, dirInfo->d_name);
             
         }
         closedir(directiory);
     }
 
-    for(int i = 0; i < count ; i++){
+    for(int i = 0; i < 15 ; i++){
         printf("%d\t\n", info[i].pid);
     }
 
