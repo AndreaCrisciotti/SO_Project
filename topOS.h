@@ -6,10 +6,12 @@
 #include<grp.h>
 #include<ctype.h>
 #include<string.h>
+#include<signal.h>
+#include<errno.h>
 
 //Definition of struct process
 struct TopStruct{
-    int pid;
+    pid_t pid;
     char user[128];
     long int pr[128];
     long int ni[128];
@@ -22,6 +24,50 @@ void attend(){
     for(int i = 0; i< 100000000; ++i);
 }
 
+void killProcess(pid_t pid){
+
+   if(kill(pid,SIGKILL) == 0){
+        printf("\nProcess by PID = %d is Kill\n", pid);
+        
+            
+    }else{
+        printf("\nERROR - Process by PID = %d wasn't Kill\n", pid);
+        printf("ERROR: %s\n", strerror(errno));
+    }
+    
+}
+
+void terminateProcess(pid_t pid){
+    if(kill(pid,SIGTERM) == 0){
+        printf("\nProcess by PID = %d is Terminate\n", pid);
+               
+    }else{
+        printf("\nERROR - Process by PID = %d wasn't Terminate\n", pid);
+        printf("ERROR: %s\n", strerror(errno));
+    }
+       
+}
+
+void resumeProcess(pid_t pid){
+    if(kill(pid,SIGCONT) == 0){
+        printf("\nProcess by PID = %d is Resume\n", pid);
+               
+    }else{
+        printf("\nERROR - Process by PID = %d wasn't Resume\n", pid);
+        printf("ERROR: %s\n", strerror(errno));
+    }    
+}
+
+void suspendProcess(pid_t pid){
+    if(kill(pid,SIGSTOP) == 0){
+        printf("\nProcess by PID = %d is Suspend\n", pid);
+               
+    }else{
+        printf("\nERROR - Process by PID = %d wasn't Suspend\n", pid);
+        printf("ERROR: %s\n", strerror(errno));
+    }    
+}
+
 //Print all the specific of a Computer
 void printSpecificOfComputer(){
     FILE* fp;
@@ -31,39 +77,41 @@ void printSpecificOfComputer(){
     fp=fopen("/proc/cpuinfo","r");
     while(fgets(character, 128, fp) != NULL){
 
-        //Print all data
+        //Print all data of computer
         printf("%s", character);
         attend();
 
     }
-    attend();
     system("clear");
 }
 
 //Print the information of Computer into PROC
 void takeInformationToProc(){
 
-    printf("\nCOUNT\tUSER\tPR\tNI\tVIRT\tCOMMAND\n\n");
+    //Header of information
+    printf("\nPID\tUSER\tPR\tNI\tVIRT\tCOMMAND\n");
 
     struct TopStruct *info = calloc(0, sizeof(struct TopStruct));
     DIR *directiory;
     struct dirent *dirInfo;
     int count = 0;
     
+    //Extract PID to directory PROC
     if((directiory = opendir("/proc")) == NULL){
        printf("ERROR into Directory PROC!!");
        exit(1);
     }else{
         while((dirInfo = readdir(directiory)) != NULL ){
             
-            int is_number = 1;
-            for(int i = 0; i < strnlen(dirInfo->d_name,1000000); i++){
+            //Take only number for the directory
+            int isNumber = 1;
+            for(int i = 0; i < strlen(dirInfo->d_name); i++){
                 if(!isdigit(dirInfo->d_name[i])){
-                    is_number = 0;
+                    isNumber = 0;
                     break;
                 }
             }
-            if(!is_number){
+            if(!isNumber){
                 continue;
             }
 
@@ -75,7 +123,8 @@ void takeInformationToProc(){
         closedir(directiory);
     }
 
-    for(int i = 0; i < 15 ; i++){
+    //Print all the information on monitor
+    for(int i = 100; i < 150 ; i++){
         printf("%d\t\n", info[i].pid);
     }
 
