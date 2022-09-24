@@ -19,6 +19,7 @@ struct TopStruct{
     long int ni[128];
     long int virt[128];
     char name[10];
+    char group[10];
 };
 
 //Wait function for scan and View information
@@ -91,7 +92,7 @@ void printSpecificOfComputer(){
 void takeInformationToProc(){
 
     //Header of information
-    printf("\nPID\tUSER\tPR\tNI\tVIRT\tCOMMAND\n");
+    printf("\nPID\tUSER\tGROUP\tPR\tNI\tVIRT\tCOMMAND\n");
 
     struct TopStruct *info = calloc(0, sizeof(struct TopStruct));
     DIR *directiory;
@@ -116,10 +117,7 @@ void takeInformationToProc(){
             }
             if(!isNumber){
                 continue;
-            }
-
-            //MODIFY
-            
+            }      
             
             count++;
             info = realloc(info, count * sizeof(struct TopStruct));
@@ -139,6 +137,15 @@ void takeInformationToProc(){
             strcpy(info[count-1].name, pw->pw_name);
             //END Take USER Information
 
+            //TAKE GROUP Information
+            
+            struct group *group = getgrgid(buf.st_gid);
+            if(group == NULL){
+                printf("ERROR: %s\n", strerror(errno));
+            }
+            strcpy(info[count-1].group, group->gr_name);
+            //END TAKE GROUP Information
+
             
         }
         closedir(directiory);
@@ -148,7 +155,8 @@ void takeInformationToProc(){
     //Print all the information on monitor
     for(int i = 0; i < count ; i++){
         printf("%d\t", info[i].pid);
-        printf("%s\t\n", info[i].name);
+        printf("%s\t", info[i].name);
+        printf("%s\t\n", info[i].group);
     }
 
     free(info);
