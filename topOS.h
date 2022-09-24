@@ -89,7 +89,7 @@ void printSpecificOfComputer(){
 }
 
 //Print the information of Computer into PROC
-void takeInformationToProc(){
+void takeInformationToProc(int refresh){
 
     //Header of information
     printf("\nPID\tUSER\tGROUP\tPR\tNI\tVIRT\tCOMMAND\n");
@@ -121,6 +121,7 @@ void takeInformationToProc(){
             
             count++;
             info = realloc(info, count * sizeof(struct TopStruct));
+
             //Take PID Information
             info[count-1].pid = atoi(dirInfo->d_name);
             //END Take PID Information
@@ -132,32 +133,34 @@ void takeInformationToProc(){
             struct passwd *pw = getpwuid(buf.st_uid);
 
             if(pw == NULL){
-                printf("ERROR: %s\n", strerror(errno));
+                printf("ERROR UID: %s\n", strerror(errno));
             }
             strcpy(info[count-1].name, pw->pw_name);
+            
             //END Take USER Information
 
             //TAKE GROUP Information
-            
+
             struct group *group = getgrgid(buf.st_gid);
             if(group == NULL){
-                printf("ERROR: %s\n", strerror(errno));
+                printf("ERROR GROUP: %s\n", strerror(errno));
             }
             strcpy(info[count-1].group, group->gr_name);
+            
             //END TAKE GROUP Information
 
-            
         }
         closedir(directiory);
     }
 
 
-    //Print all the information on monitor
-    for(int i = 0; i < count ; i++){
+    //Print data of Information
+    for(int i = 0 ; i < 25 ; i++){
         printf("%d\t", info[i].pid);
         printf("%s\t", info[i].name);
         printf("%s\t\n", info[i].group);
     }
+    
 
     free(info);
 
