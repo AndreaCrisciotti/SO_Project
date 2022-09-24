@@ -8,15 +8,17 @@
 #include<string.h>
 #include<signal.h>
 #include<errno.h>
+#include<sys/stat.h>
 
 //Definition of struct process
 struct TopStruct{
     pid_t pid;
     char user[128];
+    uid_t uid;
     long int pr[128];
     long int ni[128];
     long int virt[128];
-    char name[128];
+    char name[10];
 };
 
 //Wait function for scan and View information
@@ -95,6 +97,7 @@ void takeInformationToProc(){
     DIR *directiory;
     struct dirent *dirInfo;
     int count = 0;
+    char path[30];
     
     //Extract PID to directory PROC
     if((directiory = opendir("/proc")) == NULL){
@@ -115,17 +118,37 @@ void takeInformationToProc(){
                 continue;
             }
 
+            //MODIFY
+            
+            
             count++;
             info = realloc(info, count * sizeof(struct TopStruct));
+            //Take PID Information
             info[count-1].pid = atoi(dirInfo->d_name);
+            //END Take PID Information
+            
+            //Take USER Information
+            sprintf(path, "/proc/%d/status", info[count].pid);
+            struct stat buf;
+            stat(path,&buf);
+            struct passwd *pw = getpwuid(buf.st_uid);
+
+            if(pw == NULL){
+                printf("ERROR: %s\n", strerror(errno));
+            }
+            strcpy(info[count-1].name, pw->pw_name);
+            //END Take USER Information
+
             
         }
         closedir(directiory);
     }
 
+
     //Print all the information on monitor
-    for(int i = 100; i < 150 ; i++){
-        printf("%d\t\n", info[i].pid);
+    for(int i = 0; i < count ; i++){
+        printf("%d\t", info[i].pid);
+        printf("%s\t\n", info[i].name);
     }
 
     free(info);

@@ -5,11 +5,11 @@ int main(){
     int choice = 0;
     pid_t pid = 0;
 
-    while(choice != 6){
+    while(choice != 7){
         system("clear");
         printf("*********************SO_Project Crisciotti Andrea*********************\n");
         takeInformationToProc();
-        printf("1)Terminate\t2)Kill\t3)Suspend\t4)Resume\t5)View info Computer\t6)Exit\n");
+        printf("1)Terminate\t2)Kill\t3)Suspend\t4)Resume\t5)View info Computer\t6)Refresh\t7)Exit\n");
         printf("What do you want to do?---> ");
         scanf("%d", &choice);
 
@@ -57,6 +57,10 @@ int main(){
                 break;
 
             case 6:
+                //Refresh board
+                break;
+
+            case 7:
                 printf("Program Exit....");
                 break;
             
