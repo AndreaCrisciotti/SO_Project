@@ -9,6 +9,7 @@
 #include<signal.h>
 #include<errno.h>
 #include<sys/stat.h>
+#include<sys/sysinfo.h>
 #include<unistd.h>
 
 //Definition of struct process
@@ -22,6 +23,7 @@ struct TopStruct{
     char name[10];
     char group[10];
     float cpu;
+    char command[100];
 };
 
 //Wait function for scan and View information
@@ -90,17 +92,6 @@ void printSpecificOfComputer(){
     system("clear");
 }
 
-void takeTimeInformation(struct TopStruct *info, int count){
-    double time = 0;
-    FILE *fp = fopen("/proc/uptime", "r");
-    if(fp != NULL){
-        fscanf(fp, "%lf", &time);
-        
-    }
-    info[count].cpu = time;
-    fclose(fp);
-}
-
 void printDataByOrder(struct TopStruct *info){
     //Print data of Information
 
@@ -109,9 +100,21 @@ void printDataByOrder(struct TopStruct *info){
         printf("%s\t", info[i].name);
         printf("%s\t", info[i].group);
         printf("%.2f\t", info[i].cpu);
-        printf("%ld\t\n", info[i].virt);
+        printf("%ld\t", info[i].virt);
+        printf("%s\n", info[i].command);
 
     }
+}
+
+void takeTimeInformation(struct TopStruct *info, int count){
+    double time = 0;
+    FILE *fp = fopen("/proc/uptime", "r");
+    if(fp != NULL){
+        fscanf(fp, "%lf", &time);
+        
+    }
+    info[count].cpu = time/3600;
+    fclose(fp);    
 }
 
 void takeVirtInformation(struct TopStruct *info, int count, char *path){
@@ -128,9 +131,7 @@ void takeVirtInformation(struct TopStruct *info, int count, char *path){
         }
         fclose(fp);
     }
-
     info[count].virt = dataVirt;
-
 }
 
 void takeGroupInformation(struct TopStruct *info, int count, char *path){
@@ -157,11 +158,24 @@ void takeUserInformation(struct TopStruct *info, int count, char *path){
     strcpy(info[count-1].name, pw->pw_name);
 }
 
+void takeCommandInformation(struct TopStruct *info, int count, char *path){
+    sprintf(path, "/proc/%d/stat", info[count].pid);
+    FILE *f = fopen(path, "r");
+
+    int unused;
+    char comm[100];
+    char state;
+    int ppid;
+    fscanf(f, "%d %s %c %d", &unused, comm, &state, &ppid);
+    strcpy(info[count].command, comm);
+    fclose(f);
+}
+
 //Print the information of Computer into PROC
 void takeInformationToProc(){
 
     //Header of information
-    printf("\nPID\tUSER\tGROUP\tCPU\t\tVIRT\tNI\tCOMMAND\n");
+    printf("\nPID\tUSER\tGROUP\tCPU\tVIRT\t\tNI\tCOMMAND\n");
 
     struct TopStruct *info = calloc(0, sizeof(struct TopStruct));
     DIR *directiory;
@@ -197,7 +211,7 @@ void takeInformationToProc(){
             //END Take PID Information
             
             //Take USER Information
-            
+
             takeUserInformation(info, count-1, path);
             
             //END Take USER Information
@@ -214,9 +228,15 @@ void takeInformationToProc(){
 
             //END TAKE CPU Information
 
+            //TAKE COMMAND Information
+
+            takeCommandInformation(info,count-1, path);
+
+            //END TAKE COMMAND Information
 
 
         }
+
         closedir(directiory);
     }   
     printDataByOrder(info);
