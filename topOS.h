@@ -133,11 +133,35 @@ void takeVirtInformation(struct TopStruct *info, int count, char *path){
 
 }
 
+void takeGroupInformation(struct TopStruct *info, int count, char *path){
+    sprintf(path, "/proc/%d/status", info[count].pid);
+    struct stat buf;
+    stat(path,&buf);
+    struct group *group = getgrgid(buf.st_gid);
+    if(group == NULL){
+        printf("ERROR GROUP: %s\n", strerror(errno));
+    }
+    strcpy(info[count].group, group->gr_name);
+
+}
+
+void takeUserInformation(struct TopStruct *info, int count, char *path){
+    sprintf(path, "/proc/%d/status", info[count].pid);
+    struct stat buf;
+    stat(path,&buf);
+    struct passwd *pw = getpwuid(buf.st_uid);
+
+    if(pw == NULL){
+        printf("ERROR UID: %s\n", strerror(errno));
+    }
+    strcpy(info[count-1].name, pw->pw_name);
+}
+
 //Print the information of Computer into PROC
 void takeInformationToProc(){
 
     //Header of information
-    printf("\nPID\tUSER\tGROUP\tCPU\tVIRT\tNI\tCOMMAND\n");
+    printf("\nPID\tUSER\tGROUP\tCPU\t\tVIRT\tNI\tCOMMAND\n");
 
     struct TopStruct *info = calloc(0, sizeof(struct TopStruct));
     DIR *directiory;
@@ -173,25 +197,14 @@ void takeInformationToProc(){
             //END Take PID Information
             
             //Take USER Information
-            sprintf(path, "/proc/%d/status", info[count].pid);
-            struct stat buf;
-            stat(path,&buf);
-            struct passwd *pw = getpwuid(buf.st_uid);
-
-            if(pw == NULL){
-                printf("ERROR UID: %s\n", strerror(errno));
-            }
-            strcpy(info[count-1].name, pw->pw_name);
+            
+            takeUserInformation(info, count-1, path);
             
             //END Take USER Information
 
             //TAKE GROUP Information
 
-            struct group *group = getgrgid(buf.st_gid);
-            if(group == NULL){
-                printf("ERROR GROUP: %s\n", strerror(errno));
-            }
-            strcpy(info[count-1].group, group->gr_name);
+            takeGroupInformation(info, count-1, path);
             
             //END TAKE GROUP Information
 
