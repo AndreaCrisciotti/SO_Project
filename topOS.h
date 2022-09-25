@@ -9,6 +9,7 @@
 #include<signal.h>
 #include<errno.h>
 #include<sys/stat.h>
+#include<unistd.h>
 
 //Definition of struct process
 struct TopStruct{
@@ -20,6 +21,7 @@ struct TopStruct{
     long int virt[128];
     char name[10];
     char group[10];
+    float cpu;
 };
 
 //Wait function for scan and View information
@@ -88,11 +90,34 @@ void printSpecificOfComputer(){
     system("clear");
 }
 
+void takeTimeInformation(struct TopStruct *info, int count){
+    double time = 0;
+    FILE *fp = fopen("/proc/uptime", "r");
+    if(fp != NULL){
+        fscanf(fp, "%lf", &time);
+        
+    }
+    info[count].cpu = time;
+    fclose(fp);
+}
+
+void printDataByOrder(struct TopStruct *info){
+    //Print data of Information
+
+    for(int i = 180 ; i < 200 ; i++){
+        printf("%d\t", info[i].pid);
+        printf("%s\t", info[i].name);
+        printf("%s\t", info[i].group);
+        printf("%.2f\t\n", info[i].cpu);
+
+    }
+}
+
 //Print the information of Computer into PROC
-void takeInformationToProc(int refresh){
+void takeInformationToProc(){
 
     //Header of information
-    printf("\nPID\tUSER\tGROUP\tPR\tNI\tVIRT\tCOMMAND\n");
+    printf("\nPID\tUSER\tGROUP\tCPU\tNI\tVIRT\tCOMMAND\n");
 
     struct TopStruct *info = calloc(0, sizeof(struct TopStruct));
     DIR *directiory;
@@ -124,6 +149,7 @@ void takeInformationToProc(int refresh){
 
             //Take PID Information
             info[count-1].pid = atoi(dirInfo->d_name);
+            
             //END Take PID Information
             
             //Take USER Information
@@ -149,19 +175,16 @@ void takeInformationToProc(int refresh){
             
             //END TAKE GROUP Information
 
+            //TAKE CPU Information
+
+            takeTimeInformation(info,count-1);
+
+            //END TAKE CPU Information
+
         }
         closedir(directiory);
-    }
-
-
-    //Print data of Information
-    for(int i = 0 ; i < 25 ; i++){
-        printf("%d\t", info[i].pid);
-        printf("%s\t", info[i].name);
-        printf("%s\t\n", info[i].group);
-    }
-    
-
+    }   
+    printDataByOrder(info);
     free(info);
 
 }

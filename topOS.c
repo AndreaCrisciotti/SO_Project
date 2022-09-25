@@ -2,13 +2,13 @@
 
 int main(){
     //REMEMBER TO USE SUDO FOR START PROGRAM BECAUSE WITHOUT NOT WORK!!!!
-    int choice = 0, refresh = 0;
+    int choice = 0;
     pid_t pid = 0;
 
     while(choice != 7){
         system("clear");
         printf("*********************SO_Project Crisciotti Andrea*********************\n");
-        takeInformationToProc(refresh);
+        takeInformationToProc();
         printf("1)Terminate\t2)Kill\t3)Suspend\t4)Resume\t5)View info Computer\t6)Refresh\t7)Exit\n");
         printf("What do you want to do?---> ");
         scanf("%d", &choice);
@@ -58,7 +58,7 @@ int main(){
 
             case 6:
                 //Refresh board
-                refresh++;
+                
                 break;
 
             case 7:
