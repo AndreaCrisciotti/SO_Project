@@ -16,9 +16,9 @@ struct TopStruct{
     pid_t pid;
     char user[128];
     uid_t uid;
-    long int pr[128];
-    long int ni[128];
-    long int virt[128];
+    long int pr;
+    long int ni;
+    long int virt;
     char name[10];
     char group[10];
     float cpu;
@@ -108,16 +108,36 @@ void printDataByOrder(struct TopStruct *info){
         printf("%d\t", info[i].pid);
         printf("%s\t", info[i].name);
         printf("%s\t", info[i].group);
-        printf("%.2f\t\n", info[i].cpu);
+        printf("%.2f\t", info[i].cpu);
+        printf("%ld\t\n", info[i].virt);
 
     }
+}
+
+void takeVirtInformation(struct TopStruct *info, int count, char *path){
+    
+    long unsigned int dataVirt = 0;
+    FILE *fp = fopen(path, "r");
+    if(fp!= NULL){
+        char data[100];
+        while(fgets(data,sizeof(data), fp) != NULL){
+            if(strncmp(data,"VmSize:",7) == 0){
+                sscanf(data, "%lu",&dataVirt);
+                break;
+            }
+        }
+        fclose(fp);
+    }
+
+    info[count].virt = dataVirt;
+
 }
 
 //Print the information of Computer into PROC
 void takeInformationToProc(){
 
     //Header of information
-    printf("\nPID\tUSER\tGROUP\tCPU\tNI\tVIRT\tCOMMAND\n");
+    printf("\nPID\tUSER\tGROUP\tCPU\tVIRT\tNI\tCOMMAND\n");
 
     struct TopStruct *info = calloc(0, sizeof(struct TopStruct));
     DIR *directiory;
@@ -180,6 +200,8 @@ void takeInformationToProc(){
             takeTimeInformation(info,count-1);
 
             //END TAKE CPU Information
+
+
 
         }
         closedir(directiory);
