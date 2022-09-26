@@ -20,6 +20,7 @@ struct TopStruct{
     long int pr;
     long int ni;
     long int virt;
+    long int shr;
     char name[10];
     char group[10];
     float cpu;
@@ -77,11 +78,10 @@ void suspendProcess(pid_t pid){
 
 //Print all the specific of a Computer
 void printSpecificOfComputer(){
-    FILE* fp;
     char character[128];
     
     //Open file /PROC/CPUINFO
-    fp=fopen("/proc/cpuinfo","r");
+    FILE* fp = fopen("/proc/cpuinfo","r");
     while(fgets(character, 128, fp) != NULL){
 
         //Print all data of computer
@@ -95,12 +95,13 @@ void printSpecificOfComputer(){
 void printDataByOrder(struct TopStruct *info){
     //Print data of Information
 
-    for(int i = 180 ; i < 200 ; i++){
+    for(int i = 140 ; i < 160 ; i++){
         printf("%d\t", info[i].pid);
         printf("%s\t", info[i].name);
         printf("%s\t", info[i].group);
         printf("%.2f\t", info[i].cpu);
         printf("%ld\t", info[i].virt);
+        printf("\t");
         printf("%s\n", info[i].command);
 
     }
@@ -118,14 +119,14 @@ void takeTimeInformation(struct TopStruct *info, int count){
 }
 
 void takeVirtInformation(struct TopStruct *info, int count, char *path){
-    
+    sprintf(path, "/proc/%d/status", info[count].pid);
     long unsigned int dataVirt = 0;
     FILE *fp = fopen(path, "r");
     if(fp!= NULL){
         char data[100];
         while(fgets(data,sizeof(data), fp) != NULL){
             if(strncmp(data,"VmSize:",7) == 0){
-                sscanf(data, "%lu",&dataVirt);
+                sscanf(data, "%*s %lu",&dataVirt);
                 break;
             }
         }
@@ -175,7 +176,7 @@ void takeCommandInformation(struct TopStruct *info, int count, char *path){
 void takeInformationToProc(){
 
     //Header of information
-    printf("\nPID\tUSER\tGROUP\tCPU\tVIRT\t\tNI\tCOMMAND\n");
+    printf("\nPID\tUSER\tGROUP\tCPU\tVIRT\tSHR\tCOMMAND\n");
 
     struct TopStruct *info = calloc(0, sizeof(struct TopStruct));
     DIR *directiory;
@@ -234,6 +235,10 @@ void takeInformationToProc(){
 
             //END TAKE COMMAND Information
 
+            //MODIFY
+
+            takeVirtInformation(info, count-1, path);
+            //END MODIFY
 
         }
 
