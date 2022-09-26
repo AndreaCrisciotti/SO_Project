@@ -95,15 +95,14 @@ void printSpecificOfComputer(){
 void printDataByOrder(struct TopStruct *info){
     //Print data of Information
 
-    for(int i = 140 ; i < 160 ; i++){
+    for(int i = 130 ; i < 159 ; i++){
         printf("%d\t", info[i].pid);
         printf("%s\t", info[i].name);
         printf("%s\t", info[i].group);
         printf("%.2f\t", info[i].cpu);
         printf("%ld\t", info[i].virt);
-        printf("\t");
+        printf("%ld\t", info[i].shr);
         printf("%s\n", info[i].command);
-
     }
 }
 
@@ -112,7 +111,6 @@ void takeTimeInformation(struct TopStruct *info, int count){
     FILE *fp = fopen("/proc/uptime", "r");
     if(fp != NULL){
         fscanf(fp, "%lf", &time);
-        
     }
     info[count].cpu = time/3600;
     fclose(fp);    
@@ -142,9 +140,27 @@ void takeGroupInformation(struct TopStruct *info, int count, char *path){
     struct group *group = getgrgid(buf.st_gid);
     if(group == NULL){
         printf("ERROR GROUP: %s\n", strerror(errno));
+        exit(2);
     }
     strcpy(info[count].group, group->gr_name);
 
+}
+
+void takeShrInformation(struct TopStruct *info, int count, char *path){
+    sprintf(path, "/proc/%d/status", info[count].pid);
+    long unsigned int dataShr = 0;
+    FILE *fp = fopen(path, "r");
+    if(fp!= NULL){
+        char data[100];
+        while(fgets(data,sizeof(data), fp) != NULL){
+            if(strncmp(data,"VmData:",7) == 0){
+                sscanf(data, "%*s %lu",&dataShr);
+                break;
+            }
+        }
+        fclose(fp);
+    }
+    info[count].shr = dataShr;
 }
 
 void takeUserInformation(struct TopStruct *info, int count, char *path){
@@ -155,6 +171,7 @@ void takeUserInformation(struct TopStruct *info, int count, char *path){
 
     if(pw == NULL){
         printf("ERROR UID: %s\n", strerror(errno));
+        exit(2);
     }
     strcpy(info[count-1].name, pw->pw_name);
 }
@@ -176,7 +193,7 @@ void takeCommandInformation(struct TopStruct *info, int count, char *path){
 void takeInformationToProc(){
 
     //Header of information
-    printf("\nPID\tUSER\tGROUP\tCPU\tVIRT\tSHR\tCOMMAND\n");
+    printf("\nPID\tUSER\tGROUP\tCPU\tVIRT\tSHR\tCOMMAND\n\n");
 
     struct TopStruct *info = calloc(0, sizeof(struct TopStruct));
     DIR *directiory;
@@ -186,7 +203,7 @@ void takeInformationToProc(){
     
     //Extract PID to directory PROC
     if((directiory = opendir("/proc")) == NULL){
-       printf("ERROR into Directory PROC!!");
+       printf("ERROR OPENDIR-PROC: %s\n", strerror(errno));
        exit(1);
     }else{
         while((dirInfo = readdir(directiory)) != NULL ){
@@ -238,6 +255,8 @@ void takeInformationToProc(){
             //MODIFY
 
             takeVirtInformation(info, count-1, path);
+
+            takeShrInformation(info, count-1, path);
             //END MODIFY
 
         }

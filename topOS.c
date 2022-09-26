@@ -9,7 +9,7 @@ int main(){
         system("clear");
         printf("*********************SO_Project Crisciotti Andrea*********************\n");
         takeInformationToProc();
-        printf("1)Terminate\t2)Kill\t3)Suspend\t4)Resume\t5)View info Computer\t6)Refresh\t7)Exit\n");
+        printf("\n\n1)Terminate\t2)Kill\t3)Suspend\t4)Resume\t5)View info Computer\t6)Refresh\t7)Exit\n");
         printf("What do you want to do?---> ");
         scanf("%d", &choice);
 
@@ -67,6 +67,10 @@ int main(){
             
             default:
                 printf("Please, use a right choice!!!\n");
+                attend();
+                attend();
+                attend();
+                
                 break;
         }
     }
