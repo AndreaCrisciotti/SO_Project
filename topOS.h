@@ -217,6 +217,7 @@ void takeCommandInformation(struct TopStruct *info, int count, char *path){
 void takeCPUInformation(struct TopStruct *info, int count, char *path){
 
     //FIND A SOLUTION
+    
 }
 
 //Print the information of Computer into PROC
