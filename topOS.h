@@ -10,6 +10,8 @@
 #include<errno.h>
 #include<sys/stat.h>
 #include<sys/sysinfo.h>
+#include<sys/resource.h>
+#include<sys/time.h>
 #include<unistd.h>
 
 //Definition of struct process
@@ -102,6 +104,7 @@ void printDataByOrder(struct TopStruct *info, int refresh){
         printf("%s\t", info[i].name);
         printf("%s\t\t", info[i].group);
         printf("%.2f\t", info[i].time);
+        // printf("%f\t", info[i].cpu);
         printf("%ld\t\t", info[i].virt);
         printf("%ld\t\t", info[i].shr);
         printf("%ld\t\t", info[i].res);
@@ -198,15 +201,22 @@ void takeUserInformation(struct TopStruct *info, int count, char *path){
 
 void takeCommandInformation(struct TopStruct *info, int count, char *path){
     sprintf(path, "/proc/%d/stat", info[count].pid);
-    FILE *f = fopen(path, "r");
-
+    FILE *fp = fopen(path, "r");
     int unused;
     char comm[100];
     char state;
     int ppid;
-    fscanf(f, "%d %s %c %d", &unused, comm, &state, &ppid);
-    strcpy(info[count].command, comm);
-    fclose(f);
+
+    if(fp!= NULL){
+        fscanf(fp, "%d %s %c %d", &unused, comm, &state, &ppid);
+        strcpy(info[count].command, comm);
+    }
+    fclose(fp);
+}
+
+void takeCPUInformation(struct TopStruct *info, int count, char *path){
+
+    //FIND A SOLUTION
 }
 
 //Print the information of Computer into PROC
@@ -238,7 +248,7 @@ void takeInformationToProc(){
                     break;
                 }
             }
-            //Control for continue
+            //Jump to the new directory
             if(isNumber == 0){
                 continue;
             }      
@@ -270,7 +280,8 @@ void takeInformationToProc(){
             //TAKE RES Information
             takeResInformation(info, count-1, path);
 
-
+            //TO FIND SOLUTION
+            takeCPUInformation(info, count-1, path);
         }
         closedir(directiory);
     }   
