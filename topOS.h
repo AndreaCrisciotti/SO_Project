@@ -92,10 +92,10 @@ void printSpecificOfComputer(){
     system("clear");
 }
 
-void printDataByOrder(struct TopStruct *info){
+void printDataByOrder(struct TopStruct *info, int refresh){
     //Print data of Information
 
-    for(int i = 130 ; i < 159 ; i++){
+    for(int i = refresh ; i < refresh+20 ; i++){
         printf("%d\t", info[i].pid);
         printf("%s\t", info[i].name);
         printf("%s\t", info[i].group);
@@ -108,12 +108,13 @@ void printDataByOrder(struct TopStruct *info){
 
 void takeTimeInformation(struct TopStruct *info, int count){
     double time = 0;
+
     FILE *fp = fopen("/proc/uptime", "r");
     if(fp != NULL){
         fscanf(fp, "%lf", &time);
     }
     info[count].cpu = time/3600;
-    fclose(fp);    
+    fclose(fp); 
 }
 
 void takeVirtInformation(struct TopStruct *info, int count, char *path){
@@ -143,7 +144,6 @@ void takeGroupInformation(struct TopStruct *info, int count, char *path){
         exit(2);
     }
     strcpy(info[count].group, group->gr_name);
-
 }
 
 void takeShrInformation(struct TopStruct *info, int count, char *path){
@@ -191,10 +191,12 @@ void takeCommandInformation(struct TopStruct *info, int count, char *path){
 
 //Print the information of Computer into PROC
 void takeInformationToProc(){
-
     //Header of information
+    printf("\033[1;80m"); //COLOR HEADER
     printf("\nPID\tUSER\tGROUP\tCPU\tVIRT\tSHR\tCOMMAND\n\n");
+    printf("\033[0m"); //RESET COLOR
 
+    //Init the struct for insert data
     struct TopStruct *info = calloc(0, sizeof(struct TopStruct));
     DIR *directiory;
     struct dirent *dirInfo;
@@ -207,16 +209,17 @@ void takeInformationToProc(){
        exit(1);
     }else{
         while((dirInfo = readdir(directiory)) != NULL ){
-            
             //Take only number for the directory
             int isNumber = 1;
             for(int i = 0; i < strlen(dirInfo->d_name); i++){
-                if(!isdigit(dirInfo->d_name[i])){
+                if(isdigit(dirInfo->d_name[i]) == 0){
+                    //If a d_name isn't a number close cicle
                     isNumber = 0;
                     break;
                 }
             }
-            if(!isNumber){
+            //Control for continue
+            if(isNumber == 0){
                 continue;
             }      
             
@@ -260,10 +263,11 @@ void takeInformationToProc(){
             //END MODIFY
 
         }
-
         closedir(directiory);
     }   
-    printDataByOrder(info);
+
+    printDataByOrder(info,rand() % 190 +1);
     free(info);
+    free(dirInfo);
 
 }

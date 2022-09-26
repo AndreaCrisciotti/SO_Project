@@ -7,11 +7,25 @@ int main(){
 
     while(choice != 7){
         system("clear");
-        printf("*********************SO_Project Crisciotti Andrea*********************\n");
+        //Graphics of Program
+        printf("\033[1;90m"); //COLOR HEADER
+        printf("************************************************************************\n");
+        printf("********************* SO_Project Crisciotti Andrea *********************\n");
+        printf("*********************      Exame SO 2021/2022      *********************\n");
+        printf("************************************************************************\n\n");
+        printf("\033[0m"); //RESET COLOR
+
+        //Print information of process in Execution
         takeInformationToProc();
-        printf("\n\n1)Terminate\t2)Kill\t3)Suspend\t4)Resume\t5)View info Computer\t6)Refresh\t7)Exit\n");
+
+        //Print commando to use
+        printf("\033[1;93m"); //COLOR HEADER
+        printf("\n\n1-Terminate\t2-Kill\t3-Suspend\t4-Resume\t5-View info Computer\t6-Refresh\t7-Exit\n");
+        
+        //Select choice by switch/case
         printf("What do you want to do?---> ");
         scanf("%d", &choice);
+        printf("\033[0m"); //RESET COLOR
 
         switch (choice)
         {
