@@ -23,6 +23,7 @@ struct TopStruct{
     long int shr;
     char name[10];
     char group[10];
+    float time;
     float cpu;
     char command[100];
 };
@@ -99,7 +100,7 @@ void printDataByOrder(struct TopStruct *info, int refresh){
         printf("%d\t", info[i].pid);
         printf("%s\t", info[i].name);
         printf("%s\t", info[i].group);
-        printf("%.2f\t", info[i].cpu);
+        printf("%.2f\t", info[i].time);
         printf("%ld\t", info[i].virt);
         printf("%ld\t", info[i].shr);
         printf("%s\n", info[i].command);
@@ -113,7 +114,7 @@ void takeTimeInformation(struct TopStruct *info, int count){
     if(fp != NULL){
         fscanf(fp, "%lf", &time);
     }
-    info[count].cpu = time/3600;
+    info[count].time = time/3600;
     fclose(fp); 
 }
 
@@ -193,7 +194,7 @@ void takeCommandInformation(struct TopStruct *info, int count, char *path){
 void takeInformationToProc(){
     //Header of information
     printf("\033[1;80m"); //COLOR HEADER
-    printf("\nPID\tUSER\tGROUP\tCPU\tVIRT\tSHR\tCOMMAND\n\n");
+    printf("\nPID\tUSER\tGROUP\tTIME\tVIRT\tSHR\tCOMMAND\n\n");
     printf("\033[0m"); //RESET COLOR
 
     //Init the struct for insert data
