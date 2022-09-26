@@ -20,7 +20,7 @@ int main(){
 
         //Print commando to use
         printf("\033[1;93m"); //COLOR HEADER
-        printf("\n\n1-Terminate\t2-Kill\t3-Suspend\t4-Resume\t5-View info Computer\t6-Refresh\t7-Exit\n");
+        printf("\n\n1-Terminate ------ 2-Kill ------ 3-Suspend ------ 4-Resume ------ 5-View info PC ------ 6-Refresh ------ 7-Exit\n");
         
         //Select choice by switch/case
         printf("What do you want to do?---> ");

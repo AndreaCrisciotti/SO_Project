@@ -99,10 +99,10 @@ void printDataByOrder(struct TopStruct *info, int refresh){
     for(int i = refresh ; i < refresh+20 ; i++){
         printf("%d\t", info[i].pid);
         printf("%s\t", info[i].name);
-        printf("%s\t", info[i].group);
-        printf("%.2f\t", info[i].time);
-        printf("%ld\t", info[i].virt);
-        printf("%ld\t", info[i].shr);
+        printf("%s\t\t", info[i].group);
+        printf("%.2f\t\t", info[i].time);
+        printf("%ld\t\t", info[i].virt);
+        printf("%ld\t\t", info[i].shr);
         printf("%s\n", info[i].command);
     }
 }
@@ -114,8 +114,8 @@ void takeTimeInformation(struct TopStruct *info, int count){
     if(fp != NULL){
         fscanf(fp, "%lf", &time);
     }
-    info[count].time = time/3600;
-    fclose(fp); 
+    info[count].time = time;
+    fclose(fp);
 }
 
 void takeVirtInformation(struct TopStruct *info, int count, char *path){
@@ -194,7 +194,7 @@ void takeCommandInformation(struct TopStruct *info, int count, char *path){
 void takeInformationToProc(){
     //Header of information
     printf("\033[1;80m"); //COLOR HEADER
-    printf("\nPID\tUSER\tGROUP\tTIME\tVIRT\tSHR\tCOMMAND\n\n");
+    printf("\nPID\tUSER\tGROUP\t\tTIME\t\tVIRT \t\tSHR\t\tCOMMAND\n\n");
     printf("\033[0m"); //RESET COLOR
 
     //Init the struct for insert data
