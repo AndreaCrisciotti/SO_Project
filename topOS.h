@@ -21,6 +21,7 @@ struct TopStruct{
     long int ni;
     long int virt;
     long int shr;
+    long int res;
     char name[10];
     char group[10];
     float time;
@@ -100,9 +101,10 @@ void printDataByOrder(struct TopStruct *info, int refresh){
         printf("%d\t", info[i].pid);
         printf("%s\t", info[i].name);
         printf("%s\t\t", info[i].group);
-        printf("%.2f\t\t", info[i].time);
+        printf("%.2f\t", info[i].time);
         printf("%ld\t\t", info[i].virt);
         printf("%ld\t\t", info[i].shr);
+        printf("%ld\t\t", info[i].res);
         printf("%s\n", info[i].command);
     }
 }
@@ -149,12 +151,29 @@ void takeGroupInformation(struct TopStruct *info, int count, char *path){
 
 void takeShrInformation(struct TopStruct *info, int count, char *path){
     sprintf(path, "/proc/%d/status", info[count].pid);
-    long unsigned int dataShr = 0;
+    long unsigned int dataRes = 0;
     FILE *fp = fopen(path, "r");
     if(fp!= NULL){
         char data[100];
         while(fgets(data,sizeof(data), fp) != NULL){
             if(strncmp(data,"VmData:",7) == 0){
+                sscanf(data, "%*s %lu",&dataRes);
+                break;
+            }
+        }
+        fclose(fp);
+    }
+    info[count].res = dataRes;
+}
+
+void takeResInformation(struct TopStruct *info, int count, char *path){
+    sprintf(path, "/proc/%d/status", info[count].pid);
+    long unsigned int dataShr = 0;
+    FILE *fp = fopen(path, "r");
+    if(fp!= NULL){
+        char data[100];
+        while(fgets(data,sizeof(data), fp) != NULL){
+            if(strncmp(data,"VmRSS:",6) == 0){
                 sscanf(data, "%*s %lu",&dataShr);
                 break;
             }
@@ -194,7 +213,7 @@ void takeCommandInformation(struct TopStruct *info, int count, char *path){
 void takeInformationToProc(){
     //Header of information
     printf("\033[1;80m"); //COLOR HEADER
-    printf("\nPID\tUSER\tGROUP\t\tTIME\t\tVIRT \t\tSHR\t\tCOMMAND\n\n");
+    printf("\nPID\tUSER\tGROUP\t\tTIME\t\tVIRT \t\tSHR\t\tRES\t\tCOMMAND\n\n");
     printf("\033[0m"); //RESET COLOR
 
     //Init the struct for insert data
@@ -230,38 +249,27 @@ void takeInformationToProc(){
             //Take PID Information
             info[count-1].pid = atoi(dirInfo->d_name);
             
-            //END Take PID Information
-            
             //Take USER Information
-
-            takeUserInformation(info, count-1, path);
-            
-            //END Take USER Information
+            takeUserInformation(info, count-1, path);            
 
             //TAKE GROUP Information
-
-            takeGroupInformation(info, count-1, path);
-            
-            //END TAKE GROUP Information
+            takeGroupInformation(info, count-1, path);            
 
             //TAKE CPU Information
-
             takeTimeInformation(info,count-1);
 
-            //END TAKE CPU Information
-
             //TAKE COMMAND Information
-
             takeCommandInformation(info,count-1, path);
 
-            //END TAKE COMMAND Information
-
-            //MODIFY
-
+            //TAKE VIRT Information
             takeVirtInformation(info, count-1, path);
 
+            //TAKE SHR Information
             takeShrInformation(info, count-1, path);
-            //END MODIFY
+
+            //TAKE RES Information
+            takeResInformation(info, count-1, path);
+
 
         }
         closedir(directiory);
