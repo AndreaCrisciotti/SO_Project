@@ -27,6 +27,7 @@ struct TopStruct{
     char name[10];
     char group[10];
     float cpu;
+    float memory;
     char command[100];
 };
 
@@ -104,19 +105,23 @@ void printDataByOrder(struct TopStruct *info, int refresh){
         printf("%s\t\t", info[i].group);
         
         if(info[i].virt < 999999){
-            printf("%ld\t\t", info[i].virt);
+            printf("%ld\t", info[i].virt);
         }else{
-            printf("%ld\t\t", info[i].virt / 100);
+            printf("%ld\t", info[i].virt / 100);
         }
         
-        printf("%ld\t\t", info[i].shr);
+        printf("%ld\t", info[i].shr);
         printf("%ld\t\t", info[i].res);
 
         if(info[i].cpu < 0.0){
-            printf("ERR\t\t");
+            printf("ERR\t");
+            printf("ERR\t");
         }else{
-            printf("%.2f%%\t\t", info[i].cpu);
+            printf("%.2f%%\t", info[i].cpu);
+            printf("%.2f\t", info[i].memory);
         }
+
+        
 
         printf("%s\n", info[i].command);
     }
@@ -215,7 +220,7 @@ void takeCommandInformation(struct TopStruct *info, int count, char *path){
 
 void takeCPUInformation(struct TopStruct *info, int count, char *path){
     sprintf(path, "/proc/%d/stat", info[count].pid);
-    FILE *f = fopen(path, "r");
+    FILE *fp = fopen(path, "r");
 
     long unsigned int utime, stime;
     long long unsigned int starttime;
@@ -244,31 +249,58 @@ void takeCPUInformation(struct TopStruct *info, int count, char *path){
     //    seq_put_decimal_ull(m, ' ', start_time);                        // 22
     //    seq_put_decimal_ull(m, ' ', vsize);                             // 23
 
-    if (f != NULL)
+    if (fp != NULL)
     {
         //Use * if you wan't take parameters for example *u if the parameters is an lu or ld
-        fscanf(f, "%*d %*s %c %*d %*d %*d %*d %*d %*u %*u %*u %*u %*u %lu %lu %*d %*d %*u %*u %*d %*d %llu %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*d %*d %*u %*u %*u %*u %*d %*u %*u %*u %*u %*u %*u %*u %*d", &state, &utime, &stime, &starttime);
-
-        fclose(f);
+        fscanf(fp, "%*d %*s %c %*d %*d %*d %*d %*d %*u %*u %*u %*u %*u %lu %lu %*d %*d %*u %*u %*d %*d %llu %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*d %*d %*u %*u %*u %*u %*d %*u %*u %*u %*u %*u %*u %*u %*d", &state, &utime, &stime, &starttime);
+        fclose(fp);
     }
 
     double uptime = 0;
-    FILE *fp = fopen("/proc/uptime", "r");
-    if (fp != NULL)
+    FILE *fp2 = fopen("/proc/uptime", "r");
+    if (fp2 != NULL)
     {
-        fscanf(fp, "%lf", &uptime);
-        fclose(fp);
+        fscanf(fp2, "%lf", &uptime);
+        fclose(fp2);
     }
 
     double cpuPercentage = (utime / sysconf(_SC_CLK_TCK) + stime / sysconf(_SC_CLK_TCK)) / (uptime - starttime / sysconf(_SC_CLK_TCK)) * 100;
     info[count].cpu = cpuPercentage;
 }
 
+void takeMemInformation(struct TopStruct *info, int count, char *path){
+    sprintf(path, "/proc/%d/stat", info[count].pid);
+    long int rss;
+    long unsigned int memory = 0;
+
+    FILE *fp = fopen(path, "r");
+    if(fp != NULL){
+        fscanf(fp, "%*d %*s %*c %*d %*d %*d %*d %*d %*u %*u %*u %*u %*u %*u %*u %*d %*d %*u %*u %*d %*d %*u %*u %ld %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*d %*d %*u %*u %*u %*u %*d %*u %*u %*u %*u %*u %*u %*u %*d", &rss);
+        
+        fclose(fp);
+    }
+    
+    FILE *fp2 = fopen("/proc/meminfo", "r");
+    if(fp2 != NULL){
+        char data[100];
+        while(fgets(data, sizeof(data), fp2) != NULL){
+            if(strncmp(data, "MemTotal:", 9) == 0){
+                sscanf(data, "%*s %lu", &memory);
+                break;
+            }
+        }
+    }
+    fclose(fp2);
+
+    info[count].memory = (double)(rss * getpagesize() / 1024) / (double)memory * 100;
+    
+}
+
 //Print the information of Computer into PROC
 void takeInformationToProc(){
     //Header of information
     printf("\033[1;80m"); //COLOR HEADER
-    printf("\nPID\tUSER\tGROUP\t\tVIRT\t\tSHR\t\tRES\t\tCPU%%\t\tCOMMAND\n\n");
+    printf("\nPID\tUSER\tGROUP\t\tVIRT\tSHR\tRES\t\tCPU%%\tMEMORY%%\tCOMMAND\n\n");
     printf("\033[0m"); //RESET COLOR
 
     //Init the struct for insert data
@@ -324,6 +356,9 @@ void takeInformationToProc(){
 
             //TAKE CPU Information
             takeCPUInformation(info, count-1, path);
+
+            //TAKE MEMORY Information
+            takeMemInformation(info, count-1, path);
         }
         closedir(directiory);
     }   
