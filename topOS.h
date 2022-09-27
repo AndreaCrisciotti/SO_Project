@@ -26,7 +26,6 @@ struct TopStruct{
     long int res;
     char name[10];
     char group[10];
-    float time;
     float cpu;
     char command[100];
 };
@@ -98,29 +97,29 @@ void printSpecificOfComputer(){
 
 void printDataByOrder(struct TopStruct *info, int refresh){
     //Print data of Information
-
     for(int i = refresh ; i < refresh+20 ; i++){
+        
         printf("%d\t", info[i].pid);
         printf("%s\t", info[i].name);
         printf("%s\t\t", info[i].group);
-        printf("%.2f\t", info[i].time);
-        // printf("%f\t", info[i].cpu);
-        printf("%ld\t\t", info[i].virt);
+        
+        if(info[i].virt < 999999){
+            printf("%ld\t\t", info[i].virt);
+        }else{
+            printf("%ld\t\t", info[i].virt / 100);
+        }
+        
         printf("%ld\t\t", info[i].shr);
         printf("%ld\t\t", info[i].res);
+
+        if(info[i].cpu < 0.0){
+            printf("ERR\t\t");
+        }else{
+            printf("%.2f%%\t\t", info[i].cpu);
+        }
+
         printf("%s\n", info[i].command);
     }
-}
-
-void takeTimeInformation(struct TopStruct *info, int count){
-    double time = 0;
-
-    FILE *fp = fopen("/proc/uptime", "r");
-    if(fp != NULL){
-        fscanf(fp, "%lf", &time);
-    }
-    info[count].time = time;
-    fclose(fp);
 }
 
 void takeVirtInformation(struct TopStruct *info, int count, char *path){
@@ -215,16 +214,61 @@ void takeCommandInformation(struct TopStruct *info, int count, char *path){
 }
 
 void takeCPUInformation(struct TopStruct *info, int count, char *path){
+    sprintf(path, "/proc/%d/stat", info[count].pid);
+    FILE *f = fopen(path, "r");
 
-    //FIND A SOLUTION
-    
+    long unsigned int utime, stime;
+    long long unsigned int starttime;
+    char state;
+
+    // READ MAN PROC/[PID]/STAT
+    //    seq_printf(m, "%d (%s) %c", pid_nr_ns(pid, ns), tcomm, state);  // 1, 2, 3
+    //    seq_put_decimal_ll(m, ' ', ppid);                               // 4
+    //    seq_put_decimal_ll(m, ' ', pgid);                               // 5
+    //    seq_put_decimal_ll(m, ' ', sid);                                // 6
+    //    seq_put_decimal_ll(m, ' ', tty_nr);                             // 7
+    //    seq_put_decimal_ll(m, ' ', tty_pgrp);                           // 8
+    //    seq_put_decimal_ull(m, ' ', task->flags);                       // 9
+    //    seq_put_decimal_ull(m, ' ', min_flt);                           // 10
+    //    seq_put_decimal_ull(m, ' ', cmin_flt);                          // 11
+    //    seq_put_decimal_ull(m, ' ', maj_flt);                           // 12
+    //    seq_put_decimal_ull(m, ' ', cmaj_flt);                          // 13
+    //    seq_put_decimal_ull(m, ' ', cputime_to_clock_t(utime));         // 14
+    //    seq_put_decimal_ull(m, ' ', cputime_to_clock_t(stime));         // 15
+    //    seq_put_decimal_ll(m, ' ', cputime_to_clock_t(cutime));         // 16
+    //    seq_put_decimal_ll(m, ' ', cputime_to_clock_t(cstime));         // 17
+    //    seq_put_decimal_ll(m, ' ', priority);                           // 18
+    //    seq_put_decimal_ll(m, ' ', nice);                               // 19
+    //    seq_put_decimal_ll(m, ' ', num_threads);                        // 20
+    //    seq_put_decimal_ull(m, ' ', 0);                                 // 21
+    //    seq_put_decimal_ull(m, ' ', start_time);                        // 22
+    //    seq_put_decimal_ull(m, ' ', vsize);                             // 23
+
+    if (f != NULL)
+    {
+        //Use * if you wan't take parameters for example *u if the parameters is an lu or ld
+        fscanf(f, "%*d %*s %c %*d %*d %*d %*d %*d %*u %*u %*u %*u %*u %lu %lu %*d %*d %*u %*u %*d %*d %llu %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*d %*d %*u %*u %*u %*u %*d %*u %*u %*u %*u %*u %*u %*u %*d", &state, &utime, &stime, &starttime);
+
+        fclose(f);
+    }
+
+    double uptime = 0;
+    FILE *fp = fopen("/proc/uptime", "r");
+    if (fp != NULL)
+    {
+        fscanf(fp, "%lf", &uptime);
+        fclose(fp);
+    }
+
+    double cpuPercentage = (utime / sysconf(_SC_CLK_TCK) + stime / sysconf(_SC_CLK_TCK)) / (uptime - starttime / sysconf(_SC_CLK_TCK)) * 100;
+    info[count].cpu = cpuPercentage;
 }
 
 //Print the information of Computer into PROC
 void takeInformationToProc(){
     //Header of information
     printf("\033[1;80m"); //COLOR HEADER
-    printf("\nPID\tUSER\tGROUP\t\tTIME\t\tVIRT \t\tSHR\t\tRES\t\tCOMMAND\n\n");
+    printf("\nPID\tUSER\tGROUP\t\tVIRT\t\tSHR\t\tRES\t\tCPU%%\t\tCOMMAND\n\n");
     printf("\033[0m"); //RESET COLOR
 
     //Init the struct for insert data
@@ -266,9 +310,6 @@ void takeInformationToProc(){
             //TAKE GROUP Information
             takeGroupInformation(info, count-1, path);            
 
-            //TAKE CPU Information
-            takeTimeInformation(info,count-1);
-
             //TAKE COMMAND Information
             takeCommandInformation(info,count-1, path);
 
@@ -281,7 +322,7 @@ void takeInformationToProc(){
             //TAKE RES Information
             takeResInformation(info, count-1, path);
 
-            //TO FIND SOLUTION
+            //TAKE CPU Information
             takeCPUInformation(info, count-1, path);
         }
         closedir(directiory);
