@@ -102,7 +102,7 @@ void printDataByOrder(struct TopStruct *info, int refresh){
         
         printf("%d\t", info[i].pid);
         printf("%s\t", info[i].name);
-        printf("%s\t\t", info[i].group);
+        printf("%s\t|\t", info[i].group);
         
         if(info[i].virt < 999999){
             printf("%ld\t", info[i].virt);
@@ -111,7 +111,7 @@ void printDataByOrder(struct TopStruct *info, int refresh){
         }
         
         printf("%ld\t", info[i].shr);
-        printf("%ld\t\t", info[i].res);
+        printf("%ld\t|\t", info[i].res);
 
         if(info[i].cpu < 0.0){
             printf("ERR\t");
@@ -300,7 +300,7 @@ void takeMemInformation(struct TopStruct *info, int count, char *path){
 void takeInformationToProc(){
     //Header of information
     printf("\033[1;80m"); //COLOR HEADER
-    printf("\nPID\tUSER\tGROUP\t\tVIRT\tSHR\tRES\t\tCPU%%\tMEMORY%%\tCOMMAND\n\n");
+    printf("\nPID\tUSER\tGROUP\t|\tVIRT\tSHR\tRES\t|\tCPU%%\tMEMORY%%\tCOMMAND\n\n");
     printf("\033[0m"); //RESET COLOR
 
     //Init the struct for insert data
