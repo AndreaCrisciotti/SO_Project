@@ -9,7 +9,7 @@ the running processes.
 
 >The processes are accessed via the /proc filesystem.
 >The program monitors the resources used by each process (CPU usage/ Memory usage)
-
+![](https://img.shields.io/github/issues/AndreaCrisciotti/SO_Project?label=TOP%20usage)
 #### Running program
 First of all compile the program with:
 
