@@ -16,6 +16,7 @@ the running processes.
 
 ![](https://img.shields.io/github/issues/AndreaCrisciotti/SO_Project?label=TOP%20usage)
 ![](https://img.shields.io/github/stars/AndreaCrisciotti/SO_Project?label=VS%20Code&logo=visual-studio-code)
+![](https://img.shields.io/github/license/AndreaCrisciotti/SO_Project?color=blue&label=License&logo=MIT)
 
 # How to use
 
