@@ -10,6 +10,8 @@ the running processes.
 >The processes are accessed via the /proc filesystem.
 >The program monitors the resources used by each process (CPU usage/ Memory usage)
 
+------------
+
 # Graphics interface
 
 ![Schermata del 2022-09-28 18-37-57](https://user-images.githubusercontent.com/38427839/192834529-bae28c21-1f39-4e2b-8b71-b900ea47699e.png)
@@ -35,14 +37,20 @@ For execute use this:
 
 >`$ sudo ./topOS`
 
+------------
+
 #### Usage
 
 Opening the program you can decide to:
-- Terminate process(1)
-- Kill process (2)
-- Suspend process (3)
-- Resume process (4)
-- View information of your PC (5)
-- Refresh process (6)
-- Exit and terminate the session (7)
+
+[TOC]
+
+#Terminate process(1)
+#Kill process (2)
+#Suspend process (3)
+#Resume process (4)
+#View information of your PC (5)
+#Refresh process (6)
+##Yes, i used this procedure because TOP command is too fast and sometimes I didn't see the process that interests me
+#Exit and terminate the session (7)
 
