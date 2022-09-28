@@ -1,4 +1,4 @@
-# SO_Project
+# SO_Project --> TOPOS
 The Project implement a process monitor that allows to:
    - terminate
    - kill
@@ -9,6 +9,10 @@ the running processes.
 
 >The processes are accessed via the /proc filesystem.
 >The program monitors the resources used by each process (CPU usage/ Memory usage)
+
+<p align="center">
+Project created for Course of Operating System at University La Sapienza of Rome - Computer Engineering, requested by Prof. Giorgio Grisetti at year (2021/2022).
+</p>
 
 ------------
 
@@ -43,12 +47,15 @@ For execute use this:
 
 Opening the program you can decide to:
 
-- Terminate process(1)
-- Kill process (2)
-- Suspend process (3)
-- Resume process (4)
-- View information of your PC (5)
-- Refresh the view of process (6)
+- Terminate process(press 1)
+- Kill process (press 2)
+- Suspend process (press 3)
+- Resume process (press 4)
+- View information of your PC (press 5)
+- Refresh the view of process (press 6)
    - Yes, i used this procedure because TOP command is too fast and sometimes I didn't see the process that interests me
-- Exit and terminate the session (7)
+- Exit and terminate the session (press 7)
+
+
+# Creator
 
