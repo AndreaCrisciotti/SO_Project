@@ -43,14 +43,12 @@ For execute use this:
 
 Opening the program you can decide to:
 
-[TOC]
-
-#Terminate process(1)
-#Kill process (2)
-#Suspend process (3)
-#Resume process (4)
-#View information of your PC (5)
-#Refresh process (6)
-##Yes, i used this procedure because TOP command is too fast and sometimes I didn't see the process that interests me
-#Exit and terminate the session (7)
+- Terminate process(1)
+- Kill process (2)
+- Suspend process (3)
+- Resume process (4)
+- View information of your PC (5)
+- Refresh the view of process (6)
+   - Yes, i used this procedure because TOP command is too fast and sometimes I didn't see the process that interests me
+-Exit and terminate the session (7)
 
