@@ -35,8 +35,6 @@ First of all compile the program with:
 
 >  ```$ make```
 
-   sudo install
-
 If you want "CLEAR" the .exe program use:
 
 >`$ make clear`
