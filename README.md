@@ -41,7 +41,7 @@ If you want "CLEAR" the .exe program use:
 
 For execute use this:
 
->`$ sudo ./topOS`
+>`$ sudo ./topOS` @github/clipboard-copy-element
 
 ------------
 
