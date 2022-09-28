@@ -33,7 +33,7 @@ Project created for Course of Operating System at University La Sapienza of Rome
 #### Running program
 First of all compile the program with:
 
->```$ make``` @github/clipboard-copy-element
+>  ```$ make```
 
 If you want "CLEAR" the .exe program use:
 
@@ -41,7 +41,7 @@ If you want "CLEAR" the .exe program use:
 
 For execute use this:
 
->`$ sudo ./topOS` @github/clipboard-copy-element
+>`$ sudo ./topOS`
 
 ------------
 
