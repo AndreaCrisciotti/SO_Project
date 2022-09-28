@@ -10,9 +10,11 @@ the running processes.
 >The processes are accessed via the /proc filesystem.
 >The program monitors the resources used by each process (CPU usage/ Memory usage)
 
+<b>
 <p align="center">
 Project created for Course of Operating System at University La Sapienza of Rome - Computer Engineering, requested by Prof. Giorgio Grisetti at year (2021/2022).
 </p>
+</b>
 
 ------------
 
@@ -57,5 +59,7 @@ Opening the program you can decide to:
 - Exit and terminate the session (press 7)
 
 
-# Creator
+# Powerd By
 
+Copyright © 2021-2022 Andrea Crisciotti
+Student of Computer Engineering - University La Sapienza of Rome
