@@ -21,13 +21,13 @@ the running processes.
 #### Running program
 First of all compile the program with:
 
-`$ make`
+>`$ make`
 
 If you want "CLEAR" the .exe program use:
 
-`$ make clear`
+>`$ make clear`
 
 For execute use this:
 
-`$ sudo ./topOS`
+>`$ sudo ./topOS`
 
