@@ -15,6 +15,7 @@ the running processes.
 ![Schermata del 2022-09-28 18-37-57](https://user-images.githubusercontent.com/38427839/192834529-bae28c21-1f39-4e2b-8b71-b900ea47699e.png)
 
 ![](https://img.shields.io/github/issues/AndreaCrisciotti/SO_Project?label=TOP%20usage)
+![](https://img.shields.io/github/stars/AndreaCrisciotti/SO_Project?label=VS%20Code&logo=visual-studio-code)
 
 # How to use
 
