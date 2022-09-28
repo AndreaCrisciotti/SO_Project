@@ -50,5 +50,5 @@ Opening the program you can decide to:
 - View information of your PC (5)
 - Refresh the view of process (6)
    - Yes, i used this procedure because TOP command is too fast and sometimes I didn't see the process that interests me
--Exit and terminate the session (7)
+- Exit and terminate the session (7)
 
