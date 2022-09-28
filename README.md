@@ -10,13 +10,13 @@ the running processes.
 >The processes are accessed via the /proc filesystem.
 >The program monitors the resources used by each process (CPU usage/ Memory usage)
 
-#Graphics interface
+# Graphics interface
 
 ![Schermata del 2022-09-28 18-37-57](https://user-images.githubusercontent.com/38427839/192834529-bae28c21-1f39-4e2b-8b71-b900ea47699e.png)
 
 ![](https://img.shields.io/github/issues/AndreaCrisciotti/SO_Project?label=TOP%20usage)
 
-#How to use
+# How to use
 
 #### Running program
 First of all compile the program with:
