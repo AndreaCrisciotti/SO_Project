@@ -3,17 +3,21 @@
 #include<grp.h>
 #include<dirent.h>
 #include<pwd.h>
-#include<grp.h>
 #include<ctype.h>
 #include<string.h>
-#include<signal.h>
+#include<signal.h> // Used for manipolate process --> KILL, RESUME, TERMINATE AND SUSPEND
 #include<errno.h>
 #include<sys/stat.h>
 #include<sys/sysinfo.h>
 #include<sys/resource.h>
-#include<sys/time.h>
 #include<unistd.h>
 
+// In this project, I have used the most type to comunicate to the Operating System  
+/*
+       
+        
+
+ */
 //Definition of struct process
 struct TopStruct{
     pid_t pid;
