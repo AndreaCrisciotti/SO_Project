@@ -41,15 +41,15 @@ Project created for Course of Operating System at University La Sapienza of Rome
 #### Running program
 First of all compile the program with:
 
->  ```$ make```
+        $ make
 
 If you want "CLEAR" the .exe program use:
 
->`$ make clear`
+        $ make clear
 
 For execute use this:
 
->`$ sudo ./topOS`
+        $ sudo ./topOS
 
 ------------
 
