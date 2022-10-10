@@ -59,6 +59,10 @@ Opening the program you can decide to:
 - Exit and terminate the session (press 7)
 
 
+# Valgrind TEST
+![Schermata del 2022-10-10 17-00-09](https://user-images.githubusercontent.com/38427839/194894058-fa9c8b2e-7e0b-4b39-8647-4add5c47d1dd.png)
+
+
 # Powerd By
 
 Copyright © 2021-2022 Andrea Crisciotti
