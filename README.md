@@ -6,8 +6,7 @@
                   |_|                               |__/               
 
 
-![106208](https://user-images.githubusercontent.com/38427839/198216638-a84ba431-d611-484e-ba88-f39eb73f3f14.png)
-<img src="https://user-images.githubusercontent.com/38427839/198216638-a84ba431-d611-484e-ba88-f39eb73f3f14.png" />
+<img src="https://user-images.githubusercontent.com/38427839/198216638-a84ba431-d611-484e-ba88-f39eb73f3f14.png" style="width:50px; height:50px"/>
 
 # SO_Project --> TOPOS 
 The Project implement a process monitor that allows to:
