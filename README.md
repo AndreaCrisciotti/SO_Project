@@ -5,8 +5,9 @@
           |_|\___/| .__/ \___/|____/  |_|   |_|  \___// |\___|\___|\__|
                   |_|                               |__/               
                             
+![106208](https://user-images.githubusercontent.com/38427839/198215655-8c9279ab-1c48-48e0-ad69-6f15693d1594.png)
 
-# SO_Project --> TOPOS
+# SO_Project --> TOPOS 
 The Project implement a process monitor that allows to:
    - terminate
    - kill
@@ -14,6 +15,7 @@ The Project implement a process monitor that allows to:
    - resume
    
 the running processes.
+
 
 >The processes are accessed via the /proc filesystem.
 >The program monitors the resources used by each process (CPU usage/ Memory usage)
