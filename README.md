@@ -5,10 +5,7 @@
           |_|\___/| .__/ \___/|____/  |_|   |_|  \___// |\___|\___|\__|
                   |_|                               |__/               
 
-<div style="height: 100px; width: 200 px;">
-![106208](https://user-images.githubusercontent.com/38427839/198215655-8c9279ab-1c48-48e0-ad69-6f15693d1594.png)
-</div>
-         
+
 # SO_Project --> TOPOS 
 The Project implement a process monitor that allows to:
    - terminate
