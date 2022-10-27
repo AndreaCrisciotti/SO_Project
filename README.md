@@ -5,7 +5,9 @@
           |_|\___/| .__/ \___/|____/  |_|   |_|  \___// |\___|\___|\__|
                   |_|                               |__/               
 
-![](https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png | width=100)
+
+![106208](https://user-images.githubusercontent.com/38427839/198216638-a84ba431-d611-484e-ba88-f39eb73f3f14.png)
+<img src="https://user-images.githubusercontent.com/38427839/198216638-a84ba431-d611-484e-ba88-f39eb73f3f14.png" />
 
 # SO_Project --> TOPOS 
 The Project implement a process monitor that allows to:
