@@ -372,7 +372,7 @@ void takeInformationToProc(){
         closedir(directiory);
     }   
 
-    printDataByOrder(info,rand() % 190 +1);
+    printDataByOrder(info,rand() % 180 +1);
     free(info);
     free(dirInfo);
 
